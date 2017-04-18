@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2017 chibchasoft.com
+ * ------------------------------------------------------
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the Apache License v2.0 which accompanies
+ * this distribution.
+ *
+ *      The Apache License v2.0 is available at
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Author <a href="mailto:jvelez@chibchasoft.com">Juan Velez</a>
+ */
+package com.chibchasoft.vertx.util;
+
+import com.chibchasoft.vertx.util.concurrent.ConcurrentReferenceHashMap;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Context;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.impl.ContextInternal;
+import io.vertx.core.impl.TaskQueue;
+
+/**
+ * Collection of Vertx Utility methods.
+ *
+ * @author <a href="mailto:jvelez@chibchasoft.com">Juan Velez</a>
+ */
+public class VertxUtil {
+    /**
+     * {@link Context}s are mapped to Map of {@link Object}s to {@link TaskQueue}s
+     */
+    private static final ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> taskQueues =
+            new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK);
+
+    /**
+     * <p>Similar to {@link Context#executeBlocking(Handler, Handler)} but when this method is called several times on
+     * the same {@link Context} for the same {@code identifier}, executions associated to that value for that context
+     * will be executed serially. However, there will be no ordering guarantees in relation to executions for different
+     * identifiers for the same context or even for the same identifier but for different contexts.</p>
+     *
+     * <p><b>NOTE:</b> This method needs to be called within the scope of a Vertx Context</p>
+     *
+     * @param identifier          Object used to group and serialize executions
+     * @param blockingCodeHandler handler representing the blocking code to run
+     * @param resultHandler       handler that will be called when the blocking code is complete
+     * @param <T>                 the type of the result
+     */
+    public static <T> void executeBlocking(Object identifier, Handler<Future<T>> blockingCodeHandler, Handler<AsyncResult<T>> resultHandler) {
+        ContextInternal context = (ContextInternal) Vertx.currentContext();
+        if (context == null)
+            throw new IllegalStateException("This method needs to be called within the scope of a Vertx Context");
+        if (identifier == null)
+            throw new IllegalArgumentException("An identifier is required");
+
+        TaskQueue taskQueue = taskQueues.computeIfAbsent(context, k ->
+                new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK))
+                .computeIfAbsent(identifier, k -> new TaskQueue());
+
+        context.executeBlocking(blockingCodeHandler, taskQueue, resultHandler);
+    }
+}
