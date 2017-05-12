@@ -39,7 +39,11 @@ public class VertxUtil {
      * will be executed serially. However, there will be no ordering guarantees in relation to executions for different
      * identifiers for the same context or even for the same identifier but for different contexts.</p>
      *
-     * <p><b>NOTE:</b> This method needs to be called within the scope of a Vertx Context</p>
+     * <p><b>NOTES:</b></p>
+     *
+     * - This method needs to be called within the scope of a Vertx Context.<br>
+     * - This method relies on a Vertx internal API method
+     * {@link ContextInternal#executeBlocking(Handler, TaskQueue, Handler)}.<br>
      *
      * @param identifier          Object used to group and serialize executions
      * @param blockingCodeHandler handler representing the blocking code to run
@@ -67,6 +71,9 @@ public class VertxUtil {
      * {@code context} will be executed serially. However, there will be no ordering guarantees in relation to
      * executions for different identifiers for the same {@code context} or even for the same identifier but for
      * different {@code context}s.</p>
+     *
+     * <p><b>NOTE:</b> This method relies on a Vertx internal API method
+     * {@link ContextInternal#executeBlocking(Handler, TaskQueue, Handler)}</p>
      *
      * @param context             The {@link Context} to be used to execute the blocking code
      * @param identifier          Object used to group and serialize executions
