@@ -18,6 +18,10 @@ This method is similar to the existing `Context.executeBlocking(blockingCodeHand
 
 Calling this method more than once for the same identifier (and current `Context`), effectively results in the blocking code handler being executed sequentially with other previous blocking code handlers for the same identifer (and current `Context`) as it would normally happen with `Context.executeBlocking(blockingCodeHandler, true, resultHandler)`). There are no ordering guarantees, however, in relation to the execution of other blocking code handlers associated to different identifiers or even the same identifier but under a different `Context`.
 
+### VertxUtil.executeBlocking(context, identifier, blockingCodeHandler, resultHandler)
+
+Similar to `VertxUtil.executeBlocking(identifier, blockingCodeHandler, resultHandler)` but using the provided context.
+
 ## Maven ##
 
 Vert.x-Util is published to the [maven public repo](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.chibchasoft%22%20AND%20a%3A%22vertx-util%22).
@@ -28,7 +32,7 @@ Add the vertx-util dependency to your project, in case of maven like this:
         <dependency>
             <groupId>com.chibchasoft</groupId>
             <artifactId>vertx-util</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
         </dependency>
 ```
 

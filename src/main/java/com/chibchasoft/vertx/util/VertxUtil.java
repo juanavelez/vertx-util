@@ -46,7 +46,8 @@ public class VertxUtil {
      * @param resultHandler       handler that will be called when the blocking code is complete
      * @param <T>                 the type of the result
      */
-    public static <T> void executeBlocking(Object identifier, Handler<Future<T>> blockingCodeHandler, Handler<AsyncResult<T>> resultHandler) {
+    public static <T> void executeBlocking(Object identifier, Handler<Future<T>> blockingCodeHandler,
+                                           Handler<AsyncResult<T>> resultHandler) {
         ContextInternal context = (ContextInternal) Vertx.currentContext();
         if (context == null)
             throw new IllegalStateException("This method needs to be called within the scope of a Vertx Context");
@@ -58,5 +59,33 @@ public class VertxUtil {
                 .computeIfAbsent(identifier, k -> new TaskQueue());
 
         context.executeBlocking(blockingCodeHandler, taskQueue, resultHandler);
+    }
+
+    /**
+     * <p>Similar to {@link Context#executeBlocking(Handler, Handler)} but when this method is called several times on
+     * the same provided {@code Context} for the same {@code identifier}, executions associated to that value for that
+     * {@code context} will be executed serially. However, there will be no ordering guarantees in relation to
+     * executions for different identifiers for the same {@code context} or even for the same identifier but for
+     * different {@code context}s.</p>
+     *
+     * @param context             The {@link Context} to be used to execute the blocking code
+     * @param identifier          Object used to group and serialize executions
+     * @param blockingCodeHandler handler representing the blocking code to run
+     * @param resultHandler       handler that will be called when the blocking code is complete
+     * @param <T>                 the type of the result
+     */
+    public static <T> void executeBlocking(Context context, Object identifier, Handler<Future<T>> blockingCodeHandler,
+                                           Handler<AsyncResult<T>> resultHandler) {
+        if (context == null)
+            throw new IllegalStateException("A context is required");
+        if (identifier == null)
+            throw new IllegalArgumentException("An identifier is required");
+        ContextInternal contextInternal = (ContextInternal) context;
+
+        TaskQueue taskQueue = taskQueues.computeIfAbsent(context, k ->
+                new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK))
+                .computeIfAbsent(identifier, k -> new TaskQueue());
+
+        contextInternal.executeBlocking(blockingCodeHandler, taskQueue, resultHandler);
     }
 }
