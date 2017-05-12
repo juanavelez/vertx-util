@@ -52,17 +52,7 @@ public class VertxUtil {
      */
     public static <T> void executeBlocking(Object identifier, Handler<Future<T>> blockingCodeHandler,
                                            Handler<AsyncResult<T>> resultHandler) {
-        ContextInternal context = (ContextInternal) Vertx.currentContext();
-        if (context == null)
-            throw new IllegalStateException("This method needs to be called within the scope of a Vertx Context");
-        if (identifier == null)
-            throw new IllegalArgumentException("An identifier is required");
-
-        TaskQueue taskQueue = taskQueues.computeIfAbsent(context, k ->
-                new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK))
-                .computeIfAbsent(identifier, k -> new TaskQueue());
-
-        context.executeBlocking(blockingCodeHandler, taskQueue, resultHandler);
+        executeBlocking(Vertx.currentContext(), identifier, blockingCodeHandler, resultHandler);
     }
 
     /**
