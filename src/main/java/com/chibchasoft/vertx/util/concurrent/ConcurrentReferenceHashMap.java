@@ -470,6 +470,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
          * @param hash the hash of the key
          * @param key the key
          * @param task the update operation
+         * @param <T> the type of the task
          * @return the result of the operation
          */
         public <T> T doTask(final int hash, final Object key, final Task<T> task) {
@@ -1109,6 +1110,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
      * @see #nullSafeHashCode(int[])
      * @see #nullSafeHashCode(long[])
      * @see #nullSafeHashCode(short[])
+     * @param obj the object
+     * @return the hash code for the object
      */
     public static int nullSafeHashCode(Object obj) {
         if (obj == null) {
@@ -1149,6 +1152,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(Object[] array) {
         if (array == null) {
@@ -1164,6 +1169,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(boolean[] array) {
         if (array == null) {
@@ -1179,6 +1186,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(byte[] array) {
         if (array == null) {
@@ -1194,6 +1203,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(char[] array) {
         if (array == null) {
@@ -1209,6 +1220,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(double[] array) {
         if (array == null) {
@@ -1224,6 +1237,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(float[] array) {
         if (array == null) {
@@ -1239,6 +1254,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(int[] array) {
         if (array == null) {
@@ -1254,6 +1271,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(long[] array) {
         if (array == null) {
@@ -1269,6 +1288,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
+     * @param array The array
+     * @return the hash code for the array
      */
     public static int nullSafeHashCode(short[] array) {
         if (array == null) {
@@ -1284,6 +1305,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return the same value as {@link Boolean#hashCode()}}.
      * @see Boolean#hashCode()
+     * @param bool the boolean value
+     * @return the hash code for the boolean value
      */
     public static int hashCode(boolean bool) {
         return (bool ? 1231 : 1237);
@@ -1292,6 +1315,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return the same value as {@link Double#hashCode()}}.
      * @see Double#hashCode()
+     * @param dbl the double value
+     * @return the hash code for the double value
      */
     public static int hashCode(double dbl) {
         return hashCode(Double.doubleToLongBits(dbl));
@@ -1300,6 +1325,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return the same value as {@link Float#hashCode()}}.
      * @see Float#hashCode()
+     * @param flt the float value
+     * @return the hash code for the float value
      */
     public static int hashCode(float flt) {
         return Float.floatToIntBits(flt);
@@ -1308,6 +1335,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
     /**
      * Return the same value as {@link Long#hashCode()}}.
      * @see Long#hashCode()
+     * @param lng the long value
+     * @return the hash code for the long value
      */
     public static int hashCode(long lng) {
         return (int) (lng ^ (lng >>> 32));
