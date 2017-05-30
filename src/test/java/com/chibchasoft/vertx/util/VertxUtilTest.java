@@ -424,7 +424,7 @@ public class VertxUtilTest extends VertxTestBase {
     @SuppressWarnings("unchecked")
     private ConcurrentReferenceHashMap getTaskQueues(Context context) {
         try {
-            Field taskQueuesField = VertxUtil.class.getDeclaredField("taskQueues" );
+            Field taskQueuesField = VertxUtil.class.getDeclaredField("TASK_QUEUES" );
             if (taskQueuesField == null)
                 throw new RuntimeException("We screwed up");
             taskQueuesField.setAccessible(true);

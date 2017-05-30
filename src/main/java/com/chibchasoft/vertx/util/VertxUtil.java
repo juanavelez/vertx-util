@@ -30,7 +30,7 @@ public class VertxUtil {
     /**
      * {@link Context}s are mapped to Map of {@link Object}s to {@link TaskQueue}s
      */
-    private static final ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> taskQueues =
+    private static final ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> TASK_QUEUES =
             new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK);
 
     /**
@@ -79,7 +79,7 @@ public class VertxUtil {
             throw new IllegalArgumentException("An identifier is required");
         ContextInternal contextInternal = (ContextInternal) context;
 
-        TaskQueue taskQueue = taskQueues.computeIfAbsent(context, k ->
+        TaskQueue taskQueue = TASK_QUEUES.computeIfAbsent(context, k ->
                 new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK))
                 .computeIfAbsent(identifier, k -> new TaskQueue());
 
