@@ -20,7 +20,7 @@
 
     <groupId>com.chibchasoft</groupId>
     <artifactId>vertx-util</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
+    <version>1.1.2</version>
 
     <name>Vert.x Util</name>
     <description>A Collection of Vert.x utility methods</description>

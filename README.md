@@ -35,7 +35,7 @@ Add the vertx-util dependency to your project, in case of maven like this:
         <dependency>
             <groupId>com.chibchasoft</groupId>
             <artifactId>vertx-util</artifactId>
-            <version>1.1.2-SNAPSHOT</version>
+            <version>1.1.2</version>
         </dependency>
 ```
 
