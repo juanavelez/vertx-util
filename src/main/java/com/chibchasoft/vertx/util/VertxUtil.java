@@ -28,9 +28,9 @@ import io.vertx.core.impl.TaskQueue;
  */
 public class VertxUtil {
     /**
-     * {@link Context}s are mapped to Map of {@link Object}s to {@link TaskQueue}s
+     * {@link Context}s are mapped to a Map of {@link Object}s to {@link TaskQueue}s
      */
-    private static final ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> TASK_QUEUES =
+    static final ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> TASK_QUEUES =
             new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK);
 
     /**

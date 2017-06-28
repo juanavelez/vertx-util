@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * <p><b>NOTE:</b> This is taken(verbatim) from code found in Spring Framework's org.springframework.utiil classes
+ * <p><b>NOTE:</b> This is taken(verbatim) from code found in Spring Framework's org.springframework.util classes
  * (ConcurrentHashMap, ObjectUtils, Assert).</p>
  *
  * A {@link ConcurrentHashMap} that uses {@link ReferenceType#SOFT soft} or

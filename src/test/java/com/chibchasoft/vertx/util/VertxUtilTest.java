@@ -23,7 +23,6 @@ import io.vertx.core.impl.TaskQueue;
 import io.vertx.test.core.VertxTestBase;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -33,6 +32,18 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author <a href="mailto:jvelez@chibchasoft.com">Juan Velez</a>
  */
 public class VertxUtilTest extends VertxTestBase {
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+        // Force GC
+        System.gc();
+        ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> contextMap =
+                VertxUtil.TASK_QUEUES;
+        for (Context context : contextMap.keySet()) {
+            throw new IllegalStateException("Found context " + context + " left in VertxUtil.TASK_QUEUES after GC");
+        }
+    }
+
     @Test(expected = IllegalStateException.class)
     public void testExecuteBlockingNoContext() {
         VertxUtil.executeBlocking("Hello,", fut -> {
@@ -45,7 +56,6 @@ public class VertxUtilTest extends VertxTestBase {
     /**
      * Test {@link VertxUtil#executeBlocking(Object, Handler, Handler)}
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testExecuteBlockingWithinNonWorkerContext() {
         ContextInternal context = (ContextInternal) vertx.getOrCreateContext();
@@ -137,7 +147,6 @@ public class VertxUtilTest extends VertxTestBase {
     /**
      * Test {@link VertxUtil#executeBlocking(Object, Handler, Handler)} executing from within a Worker Verticle
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testExecuteBlockingWithinWorkerVerticle() {
         waitFor(4);
@@ -239,7 +248,6 @@ public class VertxUtilTest extends VertxTestBase {
     /**
      * Test {@link VertxUtil#executeBlocking(Context, Object, Handler, Handler)}
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testExecuteBlockingContextWithinNonWorkerContext() {
         Context context = vertx.getOrCreateContext();
@@ -331,7 +339,6 @@ public class VertxUtilTest extends VertxTestBase {
     /**
      * Test {@link VertxUtil#executeBlocking(Context, Object, Handler, Handler)} executing using a Worker Verticle
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testExecuteBlockingContextWithinWorkerVerticle() {
         waitFor(4);
@@ -421,19 +428,10 @@ public class VertxUtilTest extends VertxTestBase {
         await();
     }
 
-    @SuppressWarnings("unchecked")
-    private ConcurrentReferenceHashMap getTaskQueues(Context context) {
-        try {
-            Field taskQueuesField = VertxUtil.class.getDeclaredField("TASK_QUEUES" );
-            if (taskQueuesField == null)
-                throw new RuntimeException("We screwed up");
-            taskQueuesField.setAccessible(true);
-            ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> threadMap =
-                    (ConcurrentReferenceHashMap) taskQueuesField.get(null);
-            assertNotNull(threadMap);
-            return threadMap.get(context);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    private ConcurrentReferenceHashMap<Object, TaskQueue> getTaskQueues(Context context) {
+        ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> contextMap =
+                VertxUtil.TASK_QUEUES;
+        assertNotNull(contextMap);
+        return contextMap.get(context);
     }
 }
