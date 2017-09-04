@@ -53,6 +53,15 @@ public class VertxUtilTest extends VertxTestBase {
         });
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testExecuteBlockingNoIdentifier() {
+        VertxUtil.executeBlocking(vertx.getOrCreateContext(), null, fut -> {
+            throw new RuntimeException("We should not have gotten here");
+        }, res -> {
+            throw new RuntimeException("We should not have gotten here");
+        });
+    }
+
     /**
      * Test {@link VertxUtil#executeBlocking(Object, Handler, Handler)}
      */

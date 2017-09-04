@@ -1,6 +1,8 @@
 # Vert.x-Util
 
 [![Build Status](https://travis-ci.org/juanavelez/vertx-util.svg?branch=master)](https://travis-ci.org/juanavelez/vertx-util)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.chibchasoft/vertx-util/badge.svg)](https://search.maven.org/#search%7Cga%7C1%7Ccom.chibchasoft.vertx-util)
+[![codecov](https://codecov.io/gh/juanavelez/vertx-util/branch/master/graph/badge.svg)](https://codecov.io/gh/juanavelez/vertx-util)
 
 A Collection of miscellaneous Vert.x-related methods
 
@@ -35,7 +37,9 @@ Add the vertx-util dependency to your project, in case of maven like this:
         <dependency>
             <groupId>com.chibchasoft</groupId>
             <artifactId>vertx-util</artifactId>
-            <version>1.1.2</version>
+            <version>VERSION</version>
         </dependency>
 ```
+
+where VERSION is [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.chibchasoft/vertx-util/badge.svg)](https://search.maven.org/#search%7Cga%7C1%7Ccom.chibchasoft.vertx-util)
 

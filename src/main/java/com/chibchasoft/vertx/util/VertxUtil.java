@@ -26,11 +26,11 @@ import io.vertx.core.impl.TaskQueue;
  *
  * @author <a href="mailto:jvelez@chibchasoft.com">Juan Velez</a>
  */
-public class VertxUtil {
+public interface VertxUtil {
     /**
      * {@link Context}s are mapped to a Map of {@link Object}s to {@link TaskQueue}s
      */
-    static final ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> TASK_QUEUES =
+    ConcurrentReferenceHashMap<Context, ConcurrentReferenceHashMap<Object, TaskQueue>> TASK_QUEUES =
             new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK);
 
     /**
@@ -50,7 +50,7 @@ public class VertxUtil {
      * @param resultHandler       handler that will be called when the blocking code is complete
      * @param <T>                 the type of the result
      */
-    public static <T> void executeBlocking(Object identifier, Handler<Future<T>> blockingCodeHandler,
+    static <T> void executeBlocking(Object identifier, Handler<Future<T>> blockingCodeHandler,
                                            Handler<AsyncResult<T>> resultHandler) {
         executeBlocking(Vertx.currentContext(), identifier, blockingCodeHandler, resultHandler);
     }
@@ -71,7 +71,7 @@ public class VertxUtil {
      * @param resultHandler       handler that will be called when the blocking code is complete
      * @param <T>                 the type of the result
      */
-    public static <T> void executeBlocking(Context context, Object identifier, Handler<Future<T>> blockingCodeHandler,
+    static <T> void executeBlocking(Context context, Object identifier, Handler<Future<T>> blockingCodeHandler,
                                            Handler<AsyncResult<T>> resultHandler) {
         if (context == null)
             throw new IllegalStateException("A context is required");
