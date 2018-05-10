@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 chibchasoft.com
+ * Copyright (c) 2017-2018 chibchasoft.com
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Apache License v2.0 which accompanies
@@ -82,11 +82,7 @@ public class VertxUtilTest extends VertxTestBase {
             AtomicReference<TaskQueue> taskQueue2 = new AtomicReference<>(null);
 
             VertxUtil.executeBlocking(queue1, fut -> {
-                @SuppressWarnings("unchecked")
-                ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                assertNotNull(taskQueues);
-                taskQueue1.set(taskQueues.get(queue1));
-                assertNotNull(taskQueue1.get());
+                assertTaskQueue1AfterFirstEntry(taskQueue1, Vertx.currentContext(), queue1);
 
                 try {
                     awaitLatch(latch3);
@@ -101,10 +97,7 @@ public class VertxUtilTest extends VertxTestBase {
             });
 
             VertxUtil.executeBlocking(queue1, fut -> {
-                assertNotNull(taskQueue1);
-                ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                assertNotNull(taskQueues);
-                assertEquals(taskQueue1.get(), taskQueues.get(queue1));
+                assertTaskQueue1AfterSecondEntry(taskQueue1, Vertx.currentContext(), queue1);
 
                 try {
                     latch1.await();
@@ -119,10 +112,7 @@ public class VertxUtilTest extends VertxTestBase {
             });
 
             VertxUtil.executeBlocking(queue2, fut -> {
-                ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                assertNull(taskQueue2.get());
-                taskQueue2.set(taskQueues.get(queue2));
-                assertNotNull(taskQueue2.get());
+                assertTaskQueue2AfterFirstEntry(taskQueue2, Vertx.currentContext(), queue2);
 
                 latch3.countDown();
                 fut.complete();
@@ -132,11 +122,7 @@ public class VertxUtilTest extends VertxTestBase {
             });
 
             VertxUtil.executeBlocking(queue2, fut -> {
-                assertNotNull(taskQueue2);
-                ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                assertNotNull(taskQueues);
-                assertNotNull(taskQueue2.get());
-                assertEquals(taskQueue2.get(), taskQueues.get(queue2));
+                assertTaskQueue2AfterSecondEntry(taskQueue2, Vertx.currentContext(), queue2);
 
                 try {
                     latch3.await();
@@ -161,7 +147,7 @@ public class VertxUtilTest extends VertxTestBase {
         waitFor(4);
         vertx.deployVerticle(new AbstractVerticle() {
             @Override
-            public void start() throws Exception {
+            public void start() {
                 CountDownLatch latch1 = new CountDownLatch(1);
                 CountDownLatch latch2 = new CountDownLatch(1);
                 CountDownLatch latch3 = new CountDownLatch(1);
@@ -174,10 +160,7 @@ public class VertxUtilTest extends VertxTestBase {
                 AtomicReference<TaskQueue> taskQueue2 = new AtomicReference<>(null);
 
                 VertxUtil.executeBlocking(queue1, fut -> {
-                    ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                    assertNotNull(taskQueues);
-                    taskQueue1.set(taskQueues.get(queue1));
-                    assertNotNull(taskQueue1.get());
+                    assertTaskQueue1AfterFirstEntry(taskQueue1, Vertx.currentContext(), queue1);
 
                     try {
                         awaitLatch(latch3);
@@ -192,10 +175,7 @@ public class VertxUtilTest extends VertxTestBase {
                 });
 
                 VertxUtil.executeBlocking(queue1, fut -> {
-                    assertNotNull(taskQueue1);
-                    ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                    assertNotNull(taskQueues);
-                    assertEquals(taskQueue1.get(), taskQueues.get(queue1));
+                    assertTaskQueue1AfterSecondEntry(taskQueue1, Vertx.currentContext(), queue1);
 
                     try {
                         latch1.await();
@@ -210,10 +190,7 @@ public class VertxUtilTest extends VertxTestBase {
                 });
 
                 VertxUtil.executeBlocking(queue2, fut -> {
-                    ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                    assertNull(taskQueue2.get());
-                    taskQueue2.set(taskQueues.get(queue2));
-                    assertNotNull(taskQueue2.get());
+                    assertTaskQueue2AfterFirstEntry(taskQueue2, Vertx.currentContext(), queue2);
 
                     latch3.countDown();
                     fut.complete();
@@ -223,11 +200,7 @@ public class VertxUtilTest extends VertxTestBase {
                 });
 
                 VertxUtil.executeBlocking(queue2, fut -> {
-                    assertNotNull(taskQueue2);
-                    ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                    assertNotNull(taskQueues);
-                    assertNotNull(taskQueue2.get());
-                    assertEquals(taskQueue2.get(), taskQueues.get(queue2));
+                    assertTaskQueue2AfterSecondEntry(taskQueue2, Vertx.currentContext(), queue2);
 
                     try {
                         latch3.await();
@@ -274,11 +247,7 @@ public class VertxUtilTest extends VertxTestBase {
         AtomicReference<TaskQueue> taskQueue2 = new AtomicReference<>(null);
 
         VertxUtil.executeBlocking(context, queue1, fut -> {
-            @SuppressWarnings("unchecked")
-            ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-            assertNotNull(taskQueues);
-            taskQueue1.set(taskQueues.get(queue1));
-            assertNotNull(taskQueue1.get());
+            assertTaskQueue1AfterFirstEntry(taskQueue1, context, queue1);
 
             try {
                 awaitLatch(latch3);
@@ -293,10 +262,7 @@ public class VertxUtilTest extends VertxTestBase {
         });
 
         VertxUtil.executeBlocking(context, queue1, fut -> {
-            assertNotNull(taskQueue1);
-            ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-            assertNotNull(taskQueues);
-            assertEquals(taskQueue1.get(), taskQueues.get(queue1));
+            assertTaskQueue1AfterSecondEntry(taskQueue1, context, queue1);
 
             try {
                 latch1.await();
@@ -311,10 +277,7 @@ public class VertxUtilTest extends VertxTestBase {
         });
 
         VertxUtil.executeBlocking(context, queue2, fut -> {
-            ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-            assertNull(taskQueue2.get());
-            taskQueue2.set(taskQueues.get(queue2));
-            assertNotNull(taskQueue2.get());
+            assertTaskQueue2AfterFirstEntry(taskQueue2, context, queue2);
 
             latch3.countDown();
             fut.complete();
@@ -324,11 +287,7 @@ public class VertxUtilTest extends VertxTestBase {
         });
 
         VertxUtil.executeBlocking(context, queue2, fut -> {
-            assertNotNull(taskQueue2);
-            ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-            assertNotNull(taskQueues);
-            assertNotNull(taskQueue2.get());
-            assertEquals(taskQueue2.get(), taskQueues.get(queue2));
+            assertTaskQueue2AfterSecondEntry(taskQueue2, context, queue2);
 
             try {
                 latch3.await();
@@ -353,7 +312,7 @@ public class VertxUtilTest extends VertxTestBase {
         waitFor(4);
         vertx.deployVerticle(new AbstractVerticle() {
             @Override
-            public void start() throws Exception {
+            public void start() {
                 CountDownLatch latch1 = new CountDownLatch(1);
                 CountDownLatch latch2 = new CountDownLatch(1);
                 CountDownLatch latch3 = new CountDownLatch(1);
@@ -366,10 +325,7 @@ public class VertxUtilTest extends VertxTestBase {
                 AtomicReference<TaskQueue> taskQueue2 = new AtomicReference<>(null);
 
                 VertxUtil.executeBlocking(context, queue1, fut -> {
-                    ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                    assertNotNull(taskQueues);
-                    taskQueue1.set(taskQueues.get(queue1));
-                    assertNotNull(taskQueue1.get());
+                    assertTaskQueue1AfterFirstEntry(taskQueue1, context, queue1);
 
                     try {
                         awaitLatch(latch3);
@@ -384,10 +340,7 @@ public class VertxUtilTest extends VertxTestBase {
                 });
 
                 VertxUtil.executeBlocking(context, queue1, fut -> {
-                    assertNotNull(taskQueue1);
-                    ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                    assertNotNull(taskQueues);
-                    assertEquals(taskQueue1.get(), taskQueues.get(queue1));
+                    assertTaskQueue1AfterSecondEntry(taskQueue1, context, queue1);
 
                     try {
                         latch1.await();
@@ -402,10 +355,7 @@ public class VertxUtilTest extends VertxTestBase {
                 });
 
                 VertxUtil.executeBlocking(context, queue2, fut -> {
-                    ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                    assertNull(taskQueue2.get());
-                    taskQueue2.set(taskQueues.get(queue2));
-                    assertNotNull(taskQueue2.get());
+                    assertTaskQueue2AfterFirstEntry(taskQueue2, context, queue2);
 
                     latch3.countDown();
                     fut.complete();
@@ -415,11 +365,7 @@ public class VertxUtilTest extends VertxTestBase {
                 });
 
                 VertxUtil.executeBlocking(context, queue2, fut -> {
-                    assertNotNull(taskQueue2);
-                    ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(Vertx.currentContext());
-                    assertNotNull(taskQueues);
-                    assertNotNull(taskQueue2.get());
-                    assertEquals(taskQueue2.get(), taskQueues.get(queue2));
+                    assertTaskQueue2AfterSecondEntry(taskQueue2, context, queue2);
 
                     try {
                         latch3.await();
@@ -442,5 +388,39 @@ public class VertxUtilTest extends VertxTestBase {
                 VertxUtil.TASK_QUEUES;
         assertNotNull(contextMap);
         return contextMap.get(context);
+    }
+
+    private void assertTaskQueue1AfterFirstEntry(AtomicReference<TaskQueue> taskQueue1, Context context, String queue1) {
+        assertNull(taskQueue1.get());
+        ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(context);
+        assertNotNull(taskQueues);
+        TaskQueue taskQueue = taskQueues.get(queue1);
+        assertNotNull(taskQueue);
+        taskQueue1.set(taskQueue);
+    }
+
+    private void assertTaskQueue1AfterSecondEntry(AtomicReference<TaskQueue> taskQueue1, Context context, String queue1) {
+        ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(context);
+        assertNotNull(taskQueues);
+        TaskQueue taskQueue = taskQueue1.get();
+        assertNotNull(taskQueue);
+        assertEquals(taskQueue, taskQueues.get(queue1));
+    }
+
+    private void assertTaskQueue2AfterFirstEntry(AtomicReference<TaskQueue> taskQueue2, Context context, String queue2) {
+        assertNull(taskQueue2.get());
+        ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(context);
+        assertNotNull(taskQueues);
+        TaskQueue taskQueue = taskQueues.get(queue2);
+        assertNotNull(taskQueue);
+        taskQueue2.set(taskQueue);
+    }
+
+    private void assertTaskQueue2AfterSecondEntry(AtomicReference<TaskQueue> taskQueue2, Context context, String queue2) {
+        ConcurrentReferenceHashMap<Object, TaskQueue> taskQueues = getTaskQueues(context);
+        assertNotNull(taskQueues);
+        TaskQueue taskQueue = taskQueue2.get();
+        assertNotNull(taskQueue);
+        assertEquals(taskQueue, taskQueues.get(queue2));
     }
 }
