@@ -44,11 +44,11 @@ Similar to `VertxUtil.executeBlocking(identifier, blockingCodeHandler, resultHan
 
 ### com.chibchasoft.vertx.util.concurrent.ContextExecutorService
 
-Implementation of `ExecutorService` which relies on a Vert.x `Context` for the execution of submitted tasks.
-Submit methods for `ContextExecutorService` return `ContextFuture` instances. This is a `RunnableFuture` and 
-a Vert.x `Future` that it is implemented usig the code of both `FutureTask` and Vert.x `FutureImpl`.
+Implementation of `ExecutorService` that relies on a Vert.x `Context` for the execution of submitted tasks.
+Submit methods for `ContextExecutorService` return `ContextFuture` instances.`ContextFuture` is both a `RunnableFuture`
+and a Vert.x `Future`. `ContextFuture` implements the code of both `FutureTask` and Vert.x `FutureImpl`.
 As submitted tasks are executed within the scope of a `Context`, a normal `FutureTask.get()` would be ill-advised
-as it would both block the Context as well as preventing the actual task of being executed (in the case of an
+as it would block the `Context` as well as preventing the actual task of being executed (in the case of an
 Event Loop Context). 
 
 In this case the correct way of usage for the `ContextFuture` would be to use the provided Vert.x `Future` methods
@@ -87,5 +87,5 @@ Add the vertx-util dependency to your project, in case of maven like this:
         </dependency>
 ```
 
-where VERSION is [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.chibchasoft/vertx-util/badge.svg)](https://search.maven.org/#search%7Cga%7C1%7Ccom.chibchasoft.vertx-util)
+where the latest released VERSION is [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.chibchasoft/vertx-util/badge.svg)](https://search.maven.org/#search%7Cga%7C1%7Ccom.chibchasoft.vertx-util)
 

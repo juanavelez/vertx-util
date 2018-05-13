@@ -196,6 +196,7 @@ public class ContextExecutorServiceTest extends VertxTestBase {
 
             ContextFuture<?> cf = (ContextFuture<?>) rf;
             cf.setHandler(ar -> {
+                thread.compareAndSet(null, Thread.currentThread());
                 assertTrue(ar.succeeded());
                 assertFalse(ar.failed());
                 assertTrue(ar.result() == null);
@@ -228,6 +229,7 @@ public class ContextExecutorServiceTest extends VertxTestBase {
 
             ContextFuture<?> cf = (ContextFuture<?>) rf;
             cf.setHandler(ar -> {
+                thread.compareAndSet(null, Thread.currentThread());
                 assertFalse(ar.succeeded());
                 assertTrue(ar.failed());
                 assertTrue(ar.result() == null);
@@ -263,6 +265,7 @@ public class ContextExecutorServiceTest extends VertxTestBase {
 
             ContextFuture<?> cf = (ContextFuture<?>) rf;
             cf.setHandler(ar -> {
+                thread.compareAndSet(null, Thread.currentThread());
                 assertFalse(ar.succeeded());
                 assertTrue(ar.failed());
                 assertTrue(ar.result() == null);
@@ -299,6 +302,7 @@ public class ContextExecutorServiceTest extends VertxTestBase {
 
             ContextFuture<Integer> cf = (ContextFuture<Integer>) rf;
             cf.setHandler(ar -> {
+                thread.compareAndSet(null, Thread.currentThread());
                 assertTrue(ar.succeeded());
                 assertFalse(ar.failed());
                 assertEquals(ar.result(), Integer.valueOf(1));
